@@ -1,23 +1,21 @@
-// controller to handle shorts generation
+const generateFakeShorts = require('../services/generateFakeShorts');
 
-exports.generateShorts = (req,res)=>{
-    const{youtubeUrl} = req.body;
+const generateShorts = (req, res) => {
+  const { videoUrl } = req.body;
 
-    if(!youtubeUrl){
-        return res.status(400).json({
-            error: "YouTube URL is required"
-        })
-    }
+  if (!videoUrl) {
+    return res.status(400).json({ error: "videoUrl is required" });
+  }
 
-// dummy data for now will replace with rhea's AI soon
-const dummyClips = [
-    { start: 10, end: 40, caption: "🔥 Great moment here!" },
-    { start: 60, end: 90, caption: "😂 Funny reaction!" }
-  ];
+  const shorts =generateFakeShorts(videoUrl);
+  
 
-  res.json({
-    source: youtubeUrl,
-    generated: dummyClips,
-    message: "Clips generated successfully 🧪✨"
+  res.status(200).json({
+    message: "Shorts generated successfully (dummy)",
+    data: shorts,
   });
+};
+
+module.exports = {
+  generateShorts,
 };
