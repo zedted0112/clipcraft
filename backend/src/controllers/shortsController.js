@@ -1,21 +1,26 @@
-const generateFakeShorts = require('../services/generateFakeShorts');
+const extractTranscript = require("../services/extractTranscript");
+const extractVideoId = require("../utils/extractVideoId");
 
-const generateShorts = (req, res) => {
+const generateShorts = async (req, res) => {
   const { videoUrl } = req.body;
+  console.log("Received video URL:", videoUrl);
 
-  if (!videoUrl) {
-    return res.status(400).json({ error: "videoUrl is required" });
+  const videoId = extractVideoId(videoUrl);
+  if (!videoId) {
+    return res.status(400).json({ message: "Invalid YouTube URL" });
   }
 
-  const shorts =generateFakeShorts(videoUrl);
-  
+  try {
+    const transcript = await extractTranscript(videoId);
 
-  res.status(200).json({
-    message: "Shorts generated successfully (dummy)",
-    data: shorts,
-  });
+    return res.status(200).json({
+      message: "Transcript fetched successfully",
+      data: transcript,
+    });
+  } catch (error) {
+    console.error("Transcript error:", error.message);
+    return res.status(500).json({ message: "Failed to fetch transcript" });
+  }
 };
 
-module.exports = {
-  generateShorts,
-};
+module.exports = { generateShorts };

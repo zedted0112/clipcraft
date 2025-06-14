@@ -19,7 +19,7 @@ function Home() {
       );
 
       console.log("backend response:", response.data);
-      setShorts(response.data.shorts); // backend data will be in response
+      setShorts(response.data.data); // backend data will be in response
     } catch (error) {
       console.error("Axios error:", error);
     }
